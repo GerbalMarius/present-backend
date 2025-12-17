@@ -1,0 +1,58 @@
+﻿namespace backend.Errors;
+
+public sealed class ApiError
+{
+    private int _httpStatus = StatusCodes.Status500InternalServerError;
+    private string _code = "INTERNAL_SERVER_ERROR";
+    private string _message = "Unexpected error occurred.";
+    private readonly Dictionary<string, object?> _extras = new();
+
+    public static ApiError Init() => new();
+    
+    public static ApiError NotFound(object? id, string? msg) => Init()
+        .HttpStatus(StatusCodes.Status404NotFound)
+        .Code("NOT_FOUND")
+        .With("id", id)
+        .Message(msg ?? "Entity was not found.");
+
+    public ApiError HttpStatus(int status)
+    {
+        _httpStatus = status;
+        return this;
+    }
+
+    public ApiError Code(string code)
+    {
+        _code = code;
+        return this;
+    }
+
+    public ApiError Message(string message)
+    {
+        _message = message;
+        return this;
+    }
+    
+    public ApiError With(string key, object? value)
+    {
+        _extras[key] = value;
+        return this;
+    }
+
+    public Dictionary<string, object?> Build()
+    {
+        Dictionary<string, object?> body = new()
+        {
+            ["status"] = _httpStatus,
+            ["code"] = _code,
+            ["message"] = _message
+        };
+
+        foreach (var kv in _extras)
+        {
+            body[kv.Key] = kv.Value;
+        }
+
+        return body;
+    }
+}
