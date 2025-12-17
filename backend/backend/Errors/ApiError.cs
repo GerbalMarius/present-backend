@@ -39,6 +39,7 @@ public sealed class ApiError
         return this;
     }
 
+    //for throwable exception handling
     public Dictionary<string, object?> Build()
     {
         Dictionary<string, object?> body = new()
@@ -55,4 +56,7 @@ public sealed class ApiError
 
         return body;
     }
+    
+    //for returning the error as a plain response
+    public IResult ToResult() => TypedResults.Json(Build(), contentType:"application/json", statusCode:_httpStatus);
 }

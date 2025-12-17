@@ -1,4 +1,5 @@
-﻿using backend.Errors.Exceptions;
+﻿using backend.Errors;
+using backend.Errors.Exceptions;
 using backend.Models.DTO;
 using backend.Services.DeskStatus;
 
@@ -17,7 +18,8 @@ public static class DeskStatusActions
 
         if (res.Id == -1)
         {
-            NotFoundException.ThrowFor(id, typeof(DeskStatusData));
+           return ApiError.NotFound(id, "Entity of type DeskStatus was not found")
+                          .ToResult();
         }
         return TypedResults.Ok(res);
     }
