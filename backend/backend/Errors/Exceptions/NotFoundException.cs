@@ -12,6 +12,6 @@ public class NotFoundException : Exception
     
     public static void ThrowFor(object id, Type type)
     {
-        throw new NotFoundException($"Entity of type {type.Name} was not found.", id);
+        throw new NotFoundException($"Entity of type {type.Name} was not found", id);
     }
 }

@@ -18,5 +18,12 @@ public sealed class DeskDbContext(DbContextOptions<DeskDbContext> options) : DbC
     {
         modelBuilder.Entity<Reservation>()
             .HasKey(reservation => new { reservation.DeskId, reservation.UserId });
+        
+        modelBuilder.Entity<Reservation>()
+            .Property(reservation => reservation.ReservedFrom)
+            .HasConversion(
+                date => TimeZoneInfo.ConvertTimeToUtc(date), 
+                date => TimeZoneInfo.ConvertTimeFromUtc(date, TimeZoneInfo.Local)
+                );
     }
 }

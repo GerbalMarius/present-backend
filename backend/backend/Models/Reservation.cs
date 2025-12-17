@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Models;
 
 [Table("reservations")]
+[Index(nameof(DeskId), nameof(UserId), IsUnique = true)]
 public sealed class Reservation
 {
-    
     [Required, Column("desk_id")]
     public long DeskId { get; set; }
     
@@ -19,6 +20,9 @@ public sealed class Reservation
     [ForeignKey(nameof(UserId))]
     public required User User { get; set; }
 
-    [Required, Column("reserved_at")]
-    public DateTime ReservedAt { get; set; } = DateTime.UtcNow;
+    [Required, Column("reserved_from")]
+    public required DateTime ReservedFrom { get; set; }
+    
+    [Required, Column("reserved_to")]
+    public required DateTime ReservedTo { get; set; }
 }

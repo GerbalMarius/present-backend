@@ -13,7 +13,7 @@ public sealed class ApiError
         .HttpStatus(StatusCodes.Status404NotFound)
         .Code("NOT_FOUND")
         .With("id", id)
-        .Message(msg ?? "Entity was not found.");
+        .Message(msg ?? "Entity was not found");
 
     public ApiError HttpStatus(int status)
     {

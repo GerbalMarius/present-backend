@@ -5,7 +5,7 @@ namespace backend;
 
 public static class Seeder
 {
-    private static readonly List<DeskStatus> InitStatuses =
+    private static readonly IReadOnlyList<DeskStatus> InitStatuses =
     [
         new() { Id = 1, Name = "Open" },
         new() { Id = 2, Name = "Reserved" },
