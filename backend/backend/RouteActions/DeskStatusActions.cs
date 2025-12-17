@@ -1,5 +1,4 @@
 ﻿using backend.Errors;
-using backend.Errors.Exceptions;
 using backend.Models.DTO;
 using backend.Services.DeskStatus;
 
@@ -16,7 +15,7 @@ public static class DeskStatusActions
     {
         DeskStatusData res = await service.FindByIdAsync(id);
 
-        if (res.Id == -1)
+        if (res == DeskStatusData.Empty)
         {
            return ApiError.NotFound(id, "Entity of type DeskStatus was not found")
                           .ToResult();
