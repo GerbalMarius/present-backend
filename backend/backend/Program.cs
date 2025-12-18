@@ -16,20 +16,13 @@ builder.Services.LoadDependencies();
 
 builder.Services.AddProblemDetails();
 
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(15d);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins(frontendUrl)
             .WithMethods("OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH")
             .WithHeaders("Content-Type", "Authorization")
+            .AllowCredentials()
         );
 });
 

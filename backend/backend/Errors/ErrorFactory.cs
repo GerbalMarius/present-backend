@@ -8,7 +8,7 @@ public static class ErrorFactory
     {
         return ApiError
             .NotFound(nfe.Id, nfe.Message)
-            .Build();
+            .ToBody();
     }
 
     public static Dictionary<string, object?> Unexpected(Exception ex)
@@ -16,12 +16,12 @@ public static class ErrorFactory
         return ApiError.Init()
             .Message(ex.Message)
             .With("cause", ex.GetType().FullName)
-            .Build();
+            .ToBody();
     }
 
     public static Dictionary<string, object?> BadRequest(BadHttpRequestException bhre)
     {
         return ApiError.BadRequest(bhre.Message)
-            .Build();
+            .ToBody();
     }
 }

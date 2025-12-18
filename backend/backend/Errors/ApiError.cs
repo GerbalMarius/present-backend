@@ -54,7 +54,7 @@ public sealed class ApiError
     }
 
     //for throwable exception handling
-    public Dictionary<string, object?> Build()
+    public Dictionary<string, object?> ToBody()
     {
         Dictionary<string, object?> body = new()
         {
@@ -74,7 +74,8 @@ public sealed class ApiError
     //for returning the error as a plain response
     public IResult ToResult()
     {
-        var body = Build();
+        Dictionary<string, object?> body = ToBody();
+        
         return _httpStatus switch
         {
             StatusCodes.Status404NotFound => TypedResults.NotFound(body),

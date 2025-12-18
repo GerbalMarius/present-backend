@@ -18,7 +18,7 @@ public sealed class ValidationFilter : IEndpointFilter
             List<ValidationResult> validationResults = [];
 
             ValidationContext vc = new(contextArgument);
-            
+
             PopulateValidationErrors(errors, contextArgument, vc, validationResults);
         }
 
@@ -26,9 +26,9 @@ public sealed class ValidationFilter : IEndpointFilter
         {
             return ApiError
                 .UnprocessableEntity(errors)
-                .ToResult();
+                .ToResult(); 
         }
-        
+
         return await next(context);
     }
 
@@ -42,13 +42,12 @@ public sealed class ValidationFilter : IEndpointFilter
 
         foreach (var vr in validationResults)
         {
-            string key = vr.MemberNames.FirstOrDefault() ?? "";
-            string message = vr.ErrorMessage ?? "Invalid value";
+            var key = vr.MemberNames.FirstOrDefault() ?? "";
+            var message = vr.ErrorMessage ?? "Invalid value";
 
-            if (!string.IsNullOrWhiteSpace(key))
-            {
-                errors.TryAdd(key, message);
-            }
+            if (string.IsNullOrWhiteSpace(key)) continue;
+
+            errors.TryAdd(key, message);
         }
     }
 }
