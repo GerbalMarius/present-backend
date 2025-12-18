@@ -6,23 +6,23 @@ namespace backend.Services.Desk;
 
 public sealed class DeskService(DeskDbContext db) : IDeskService
 {
-    public Task<List<DeskData>> GetAllAsync()
+    public Task<List<DeskData>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return db.Desks
             .AsNoTracking()
             .Include(desk => desk.Reservations)
+            .ThenInclude(reservation => reservation.User)
             .Select(desk => DeskData.OfDeskWithUser(desk))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<DeskData> GetByIdAsync(long id)
+    public async Task<DeskData> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
-        DeskData? result = await db.Desks
-            .AsNoTracking()
+        Models.Desk? result = await db.Desks
             .Include(desk => desk.Reservations)
-            .Select(desk => DeskData.OfDeskWithUser(desk))
-            .FirstOrDefaultAsync(desk => desk.Id == id);
+            .ThenInclude(reservation => reservation.User)
+            .FirstOrDefaultAsync(desk => desk.Id == id, cancellationToken);
         
-        return result ?? DeskData.Empty;
+        return result == null ? DeskData.Empty : DeskData.OfDeskWithUser(result);
     }
 }

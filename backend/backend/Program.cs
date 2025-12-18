@@ -1,5 +1,6 @@
 using backend;
 using backend.Errors;
+using backend.RouteActions;
 
 const string frontendUrl = "http://localhost:3000";
 
@@ -42,5 +43,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseSession();
 app.UseCors("AllowFrontend");
+
+var root = app.MapGroup("/api");
+
+var desks = root.MapGroup("/desks");
+desks.MapGet("/", DeskActions.GetAllAsync);
+desks.MapGet("/{id:long}", DeskActions.GetByIdAsync);
 
 app.Run();

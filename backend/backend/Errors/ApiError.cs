@@ -7,6 +7,8 @@ public sealed class ApiError
     private string _message = "Unexpected error occurred.";
     private readonly Dictionary<string, object?> _extras = new();
 
+    private ApiError(){}
+    
     public static ApiError Init() => new();
     
     public static ApiError NotFound(object? id, string? msg) => Init()
@@ -58,5 +60,13 @@ public sealed class ApiError
     }
     
     //for returning the error as a plain response
-    public IResult ToResult() => TypedResults.Json(Build(), contentType:"application/json", statusCode:_httpStatus);
+    public IResult ToResult()
+    {
+        var body = Build();
+        return _httpStatus switch
+        {
+            StatusCodes.Status404NotFound => TypedResults.NotFound(body),
+            _ => TypedResults.Json(body, contentType: "application/json", statusCode: _httpStatus)
+        };
+    }
 }

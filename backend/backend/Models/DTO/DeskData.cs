@@ -14,7 +14,7 @@ public record DeskData(
         var today = DateTime.Now;
         var tomorrow = today.AddDays(1);
 
-        User? reservationRecipient = desk.Reservations
+        var reservationRecipient = desk.Reservations
             .Where(r => r.ReservedFrom < tomorrow && r.ReservedTo >= today)
             .Select(r => r.User)
             .FirstOrDefault();
