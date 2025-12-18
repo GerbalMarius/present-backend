@@ -5,7 +5,7 @@ namespace backend.RouteActions;
 
 public static class ReservationActions
 {
-    public static async Task<IResult> CreateAsync(ReservationData reservationData, IReservationService reservationService)
+    public static async Task<IResult> CreateAsync(ReservationCreateView reservationData, IReservationService reservationService)
     {
         var reservation = await reservationService.CreateAsync(reservationData);
         

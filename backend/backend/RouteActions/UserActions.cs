@@ -8,4 +8,9 @@ public static class UserActions
     {
         return TypedResults.Ok(await userService.GetCurrentUserAsync());
     }
+
+    public static async Task<IResult> GetReservationDataByUserAsync(long id, IUserService userService)
+    {
+        return TypedResults.Ok(await userService.GetReservationDataByUserAsync(id));
+    }
 }

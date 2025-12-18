@@ -12,10 +12,12 @@ public static class ErrorConfigurator
         Dictionary<string, object?> body = 
             CreateBodyForException(ex ?? new Exception("Unexpected error occurred."));
 
-        httpContext.Response.StatusCode = (int)(body["status"] ?? StatusCodes.Status500InternalServerError);
-        httpContext.Response.ContentType = "application/json;charset=utf-8";
+        HttpResponse response = httpContext.Response;
+        
+        response.StatusCode = (int)(body["status"] ?? StatusCodes.Status500InternalServerError);
+        response.ContentType = "application/json;charset=utf-8";
 
-         await httpContext.Response.WriteAsJsonAsync(body);
+         await response.WriteAsJsonAsync(body);
     }
 
     private static Dictionary<string, object?> CreateBodyForException(Exception exception)

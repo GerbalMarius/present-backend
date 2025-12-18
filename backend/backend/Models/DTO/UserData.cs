@@ -7,5 +7,5 @@ public record UserData(
     string LastName
 )
 {
-    public static UserData Empty => new(-1, "", "", "");
+    public static UserData Empty => new(-1, string.Empty, string.Empty, string.Empty);
 };

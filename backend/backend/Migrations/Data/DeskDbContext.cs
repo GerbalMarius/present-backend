@@ -14,8 +14,6 @@ public sealed class DeskDbContext(DbContextOptions<DeskDbContext> options) : DbC
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Reservation>()
-            .HasKey(reservation => new { reservation.DeskId, reservation.UserId });
         
         modelBuilder.Entity<Reservation>()
             .Property(reservation => reservation.ReservedFrom)

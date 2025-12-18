@@ -4,7 +4,7 @@ namespace backend.Services.Reservation;
 
 public interface IReservationService
 {
-    Task<List<ReservationData>> GetAllByUserAsync(long userId, CancellationToken cancellationToken = default);
-    
-    Task<Models.Reservation> CreateAsync(ReservationData reservationData, CancellationToken cancellationToken = default);
+    Task<ReservationData> CreateAsync(ReservationCreateView createData, CancellationToken cancellationToken = default);
+
+    Task CancelAsync(long reservationId, CancellationToken cancellationToken = default);
 }

@@ -9,6 +9,10 @@ namespace backend.Models;
 [Index(nameof(ReservedTo), nameof(ReservedFrom))]
 public sealed class Reservation
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Key, Column("id")]
+    public long Id { get; set; }
+    
     [Required, Column("desk_id")]
     public long DeskId { get; set; }
     

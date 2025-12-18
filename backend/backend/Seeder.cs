@@ -12,7 +12,7 @@ public static class Seeder
         var db = scope.ServiceProvider.GetRequiredService<DeskDbContext>();
         db.Database.EnsureCreated();
 
-        var todayStart = DateTime.Now;
+        var todayStart = DateTime.Now.Date;
         var tomorrowStart = todayStart.AddDays(1);
 
         // --- USERS ---
@@ -47,6 +47,7 @@ public static class Seeder
         [
             new()
             {
+                Id = 1,
                 DeskId = desks[2].Id, Desk = desks[2],
                 UserId = users[0].Id, User = users[0],
                 ReservedFrom = todayStart.AddHours(9),
@@ -56,6 +57,8 @@ public static class Seeder
 
             new()
             {
+                
+                Id = 2,
                 DeskId = desks[3].Id, Desk = desks[3],
                 UserId = users[1].Id, User = users[1],
                 ReservedFrom = todayStart.AddHours(-1),
@@ -65,6 +68,7 @@ public static class Seeder
 
             new()
             {
+                Id = 3,
                 DeskId = desks[4].Id, Desk = desks[4],
                 UserId = users[2].Id, User = users[2],
                 ReservedFrom = todayStart.AddDays(-1).AddHours(10),
@@ -74,6 +78,7 @@ public static class Seeder
 
             new()
             {
+                Id = 4,
                 DeskId = desks[5].Id, Desk = desks[5],
                 UserId = users[3].Id, User = users[3],
                 ReservedFrom = tomorrowStart.AddHours(10),
@@ -83,6 +88,7 @@ public static class Seeder
 
             new()
             {
+                Id = 5,
                 DeskId = desks[6].Id, Desk = desks[6],
                 UserId = users[2].Id, User = users[2],
                 ReservedFrom = todayStart.AddHours(-2), // yesterday late

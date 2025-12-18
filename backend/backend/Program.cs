@@ -1,6 +1,7 @@
 using backend;
 using backend.Errors;
 using backend.Filters;
+using backend.Models;
 using backend.Models.DTO;
 using backend.RouteActions;
 
@@ -69,7 +70,10 @@ desks.MapGet("/{id:long}", DeskActions.GetByIdAsync)
 
 var users = root.MapGroup("/users");
 
+users.MapGet("/{id:long}/reservations", UserActions.GetReservationDataByUserAsync);
+
 users.MapGet("/me", UserActions.GetCurrentUserAsync)
-    .WithName("GetCurrentUser");
+    .WithName("GetCurrentUser")
+    .Produces<UserData>();
 
 app.Run();

@@ -15,4 +15,13 @@ public sealed class UserService(DeskDbContext db) : IUserService
             ? UserData.Empty
             : new UserData(user.Id, user.Email, user.FirstName, user.LastName);
     }
+
+    public Task<List<ReservationData>> GetReservationDataByUserAsync(long userId, CancellationToken cancellationToken = default)
+    {
+        
+        return db.Reservations
+            .Where(r => r.UserId == userId)
+            .Select(r => ReservationData.Of(r))
+            .ToListAsync(cancellationToken);
+    }
 }
