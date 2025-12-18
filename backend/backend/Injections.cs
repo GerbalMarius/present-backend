@@ -1,6 +1,8 @@
 ﻿using backend.Deps.Password;
 using backend.Migrations.Data;
 using backend.Services.Desk;
+using backend.Services.Reservation;
+using backend.Services.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend;
@@ -27,6 +29,8 @@ public static class Injections
     private static void AddServices(IServiceCollection services)
     {
         services.AddScoped<IDeskService, DeskService>();
+        services.AddScoped<IReservationService, ReservationService>();
+        services.AddScoped<IUserService, UserService>();
     }
     
     

@@ -16,6 +16,18 @@ public sealed class ApiError
         .Code("NOT_FOUND")
         .With("id", id)
         .Message(msg ?? "Entity was not found");
+    
+    public static ApiError UnprocessableEntity(Dictionary<string, string> errors) => Init()
+        .HttpStatus(StatusCodes.Status422UnprocessableEntity)
+        .Code("UNPROCESSABLE_ENTITY")
+        .With("errors", errors)
+        .Message("There were validation errors");
+    
+    public static ApiError BadRequest(string? msg) => Init()
+        .HttpStatus(StatusCodes.Status400BadRequest)
+        .Code("BAD_REQUEST")
+        .Message(msg ?? "Bad request");
+    
 
     public ApiError HttpStatus(int status)
     {
@@ -66,6 +78,9 @@ public sealed class ApiError
         return _httpStatus switch
         {
             StatusCodes.Status404NotFound => TypedResults.NotFound(body),
+            StatusCodes.Status400BadRequest => TypedResults.BadRequest(body),
+            StatusCodes.Status409Conflict => TypedResults.Conflict(body),
+            StatusCodes.Status422UnprocessableEntity => TypedResults.UnprocessableEntity(body),
             _ => TypedResults.Json(body, contentType: "application/json", statusCode: _httpStatus)
         };
     }

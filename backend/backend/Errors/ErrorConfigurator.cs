@@ -13,7 +13,7 @@ public static class ErrorConfigurator
             CreateBodyForException(ex ?? new Exception("Unexpected error occurred."));
 
         httpContext.Response.StatusCode = (int)(body["status"] ?? StatusCodes.Status500InternalServerError);
-        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.ContentType = "application/json;charset=utf-8";
 
          await httpContext.Response.WriteAsJsonAsync(body);
     }
@@ -23,6 +23,7 @@ public static class ErrorConfigurator
         return exception switch
         {
             NotFoundException nfe => ErrorFactory.NotFound(nfe),
+            BadHttpRequestException bhre => ErrorFactory.BadRequest(bhre),
             _ => ErrorFactory.Unexpected(exception)
         };
     }

@@ -17,9 +17,9 @@ public class DeskTests
         
         var result = await DeskActions.GetAllAsync(mock.Object);
         
-        Assert.IsType<Ok<List<DeskData>>>(result);
-        
-        var ok = (Ok<List<DeskData>>)result;
-        Assert.Empty(ok.Value!);
+        Assert.True(
+            result is Ok<List<DeskData>> desks && 
+            desks.Value!.Count == 0
+            );
     }
 }

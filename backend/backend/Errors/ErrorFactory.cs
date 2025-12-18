@@ -4,10 +4,10 @@ namespace backend.Errors;
 
 public static class ErrorFactory
 {
-    public static Dictionary<string, object?> NotFound(NotFoundException ex)
+    public static Dictionary<string, object?> NotFound(NotFoundException nfe)
     {
         return ApiError
-            .NotFound(ex.Id, ex.Message)
+            .NotFound(nfe.Id, nfe.Message)
             .Build();
     }
 
@@ -16,6 +16,12 @@ public static class ErrorFactory
         return ApiError.Init()
             .Message(ex.Message)
             .With("cause", ex.GetType().FullName)
+            .Build();
+    }
+
+    public static Dictionary<string, object?> BadRequest(BadHttpRequestException bhre)
+    {
+        return ApiError.BadRequest(bhre.Message)
             .Build();
     }
 }
