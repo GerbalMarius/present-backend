@@ -5,8 +5,6 @@ namespace backend.Migrations.Data;
 
 public sealed class DeskDbContext(DbContextOptions<DeskDbContext> options) : DbContext(options)
 {
-    public DbSet<DeskStatus> DeskStatuses => Set<DeskStatus>();
-    
     public DbSet<Desk> Desks => Set<Desk>();
     
     public DbSet<Reservation> Reservations => Set<Reservation>();
@@ -25,5 +23,12 @@ public sealed class DeskDbContext(DbContextOptions<DeskDbContext> options) : DbC
                 date => TimeZoneInfo.ConvertTimeToUtc(date), 
                 date => TimeZoneInfo.ConvertTimeFromUtc(date, TimeZoneInfo.Local)
                 );
+
+        modelBuilder.Entity<Reservation>()
+            .Property(reservation => reservation.ReservedTo)
+            .HasConversion(
+                date => TimeZoneInfo.ConvertTimeToUtc(date), 
+                date => TimeZoneInfo.ConvertTimeFromUtc(date, TimeZoneInfo.Local)
+            );
     }
 }

@@ -1,6 +1,6 @@
 ﻿using backend.Deps.Password;
 using backend.Migrations.Data;
-using backend.Services.DeskStatus;
+using backend.Services.Desk;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend;
@@ -26,7 +26,7 @@ public static class Injections
 
     private static void AddServices(IServiceCollection services)
     {
-        services.AddScoped<IDeskStatusService, DeskStatusService>();
+        services.AddScoped<IDeskService, DeskService>();
     }
     
     

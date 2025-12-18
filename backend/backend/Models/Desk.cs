@@ -9,11 +9,9 @@ public sealed class Desk
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key, Column("id")]
     public long Id { get; set; }
-    
-    [Required, Column("status_id")]
-    public long DeskStatusId { get; set; }
 
-    public required DeskStatus Status { get; set; }
+    [Required, Column("is_in_maintenance")]
+    public bool IsInMaintenance { get; set; } = false;
 
     public ICollection<Reservation> Reservations { get; set; } = [];
 }
