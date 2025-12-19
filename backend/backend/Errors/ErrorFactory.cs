@@ -2,6 +2,7 @@
 
 namespace backend.Errors;
 
+//used to quickly create error response bodies after unhandled exception happened
 public static class ErrorFactory
 {
     public static Dictionary<string, object?> NotFound(NotFoundException nfe)

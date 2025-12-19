@@ -44,11 +44,15 @@ public class UserTests : IDisposable
             new(2, userId, 3, now, now.AddDays(10))
         ];
         
-        _userService.Setup(s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(reservations);
+        _userService.Setup(
+                s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>())
+                )
+                .ReturnsAsync(reservations);
         
         IResult result = await UserActions.GetReservationDataByUserAsync(userId, _userService.Object);
-        _userService.Verify(s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+        _userService.Verify(
+            s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>()), 
+            Times.Once);
         
         var ok = Assert.IsType<Ok<List<ReservationData>>>(result);
         

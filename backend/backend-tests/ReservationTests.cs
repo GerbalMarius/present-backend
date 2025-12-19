@@ -92,7 +92,8 @@ public class ReservationTests : IDisposable
         const long reservationId = 5;
         
         ReservationData reservationData = new(reservationId, 1, 2, DateTime.Now, DateTime.Now.AddDays(5));
-        _reservationService.Setup(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()))
+        _reservationService
+            .Setup(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(reservationData);
         
         IResult result = await ReservationActions.CancelAsync(reservationId, _reservationService.Object);
@@ -108,11 +109,16 @@ public class ReservationTests : IDisposable
     {
         const long reservationId = 5;
         
-        _reservationService.Setup(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()))
+        _reservationService
+            .Setup(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(ReservationData.Empty);
         
         IResult result = await ReservationActions.CancelAsync(reservationId, _reservationService.Object);
-        _reservationService.Verify(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), Times.Once);
+        _reservationService.Verify(
+            s => 
+                s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), 
+                Times.Once
+            );
         
         var notFound = Assert.IsType<NotFound<Dictionary<string, object?>>>(result);    
         Assert.NotNull(notFound.Value);
@@ -120,6 +126,56 @@ public class ReservationTests : IDisposable
         Assert.Equal(StatusCodes.Status404NotFound, notFound.StatusCode);
     }
     
+    
+     [Fact]
+    public async Task ReservationActionsCancelForADay_WhenFound_ReturnsNoContent()
+    {
+        const long reservationId = 7;
+
+        var returned = new ReservationData(
+            reservationId,
+            UserId: 1,
+            DeskId: 2,
+            ReservedFrom: DateTime.Now.AddDays(1),
+            ReservedTo: DateTime.Now.AddDays(5)
+        );
+
+        _reservationService
+            .Setup(s => s.CancelForADayAsync(reservationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(returned);
+
+        IResult result = await ReservationActions.CancelForADayAsync(reservationId, _reservationService.Object);
+        _reservationService.Verify(
+            s => s.CancelForADayAsync(reservationId, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+        
+        var noContent = Assert.IsType<NoContent>(result);
+        
+        Assert.Equal(StatusCodes.Status204NoContent, noContent.StatusCode);
+    }
+
+    [Fact]
+    public async Task ReservationActionsCancelForADay_WhenNotFound_ReturnsNotFound()
+    {
+        const long reservationId = 7;
+
+        _reservationService
+            .Setup(s => s.CancelForADayAsync(reservationId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ReservationData.Empty);
+
+        IResult result = await ReservationActions.CancelForADayAsync(reservationId, _reservationService.Object);
+
+        _reservationService.Verify(
+            s => s.CancelForADayAsync(reservationId, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+
+        var notFound = Assert.IsType<NotFound<Dictionary<string, object?>>>(result);
+        Assert.NotNull(notFound.Value);
+        Assert.Equal("Reservation not found", notFound.Value["message"]);
+        Assert.Equal(StatusCodes.Status404NotFound, notFound.StatusCode);
+    }
     
 
     public void Dispose()

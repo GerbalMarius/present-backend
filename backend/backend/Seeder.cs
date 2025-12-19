@@ -12,11 +12,12 @@ public static class Seeder
         var db = scope.ServiceProvider.GetRequiredService<DeskDbContext>();
         db.Database.EnsureCreated();
 
-        // Day boundaries only
+        
         var today = DateTime.Now.Date;
         var tomorrow = today.AddDays(1);
 
         // --- USERS ---
+        // since auth is not needed, the password is unhashed
         List<User> users =
         [
             new() { Email = "marius@gmail.com", Password = "pass", FirstName = "Marius", LastName = "Ambrazevičius" },

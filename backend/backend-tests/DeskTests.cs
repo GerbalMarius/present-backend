@@ -36,7 +36,9 @@ public class DeskTests : IDisposable
                        .ReturnsAsync(deskData);
         
         IResult result = await DeskActions.GetByIdAsync(1, _deskService.Object);
-        _deskService.Verify(s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+        _deskService.Verify(
+            s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), 
+            Times.Once);
         
         
         Assert.True(
