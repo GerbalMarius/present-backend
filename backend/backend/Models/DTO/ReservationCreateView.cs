@@ -19,5 +19,6 @@ public record ReservationCreateView(
     DateTime? ReservedFrom,
     
     [property: Required(ErrorMessage = "Reservation end date is required")]
+    [property: DateNotInPast(ErrorMessage = "Reservation date must be in the present or the future")]
     DateTime? ReservedTo
     );
