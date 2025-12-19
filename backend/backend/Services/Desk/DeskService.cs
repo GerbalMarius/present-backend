@@ -12,7 +12,7 @@ public sealed class DeskService(DeskDbContext db) : IDeskService
             .AsNoTracking()
             .Include(desk => desk.Reservations)
             .ThenInclude(reservation => reservation.User)
-            .Select(desk => DeskData.OfDeskWithUser(desk))
+            .Select(desk => DeskData.OfDesk(desk))
             .ToListAsync(cancellationToken);
     }
 
@@ -23,6 +23,6 @@ public sealed class DeskService(DeskDbContext db) : IDeskService
             .ThenInclude(reservation => reservation.User)
             .FirstOrDefaultAsync(desk => desk.Id == id, cancellationToken);
         
-        return result == null ? DeskData.Empty : DeskData.OfDeskWithUser(result);
+        return result == null ? DeskData.Empty : DeskData.OfDesk(result);
     }
 }

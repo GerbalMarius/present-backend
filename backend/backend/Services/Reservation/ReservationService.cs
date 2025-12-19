@@ -44,8 +44,11 @@ public sealed class ReservationService(DeskDbContext db) : IReservationService
         
         await db.SaveChangesAsync(cancellationToken);
 
-        if (reservation.ReservedTo >= reservation.ReservedFrom) return ReservationData.Of(reservation);
-        
+        if (reservation.ReservedTo > reservation.ReservedFrom)
+        {
+            return ReservationData.Of(reservation);
+        }
+        // start date overlapped end date, cancel reservation
         db.Reservations.Remove(reservation);
         await db.SaveChangesAsync(cancellationToken);
 

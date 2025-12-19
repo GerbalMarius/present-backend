@@ -10,30 +10,20 @@ public record DeskData(
 {
     public static DeskData Empty => new(-1, false, false, null, null);
     
-    public static DeskData OfDeskWithUser(Desk desk)
+    public static DeskData OfDesk(Desk desk)
     {
         var today = DateTime.Now;
-
-        // Pick the most relevant reservation to show:
-        // "current or next upcoming" = any reservation not finished yet,
-        // ordered by start date.
         var r = desk.Reservations
             .Where(r => r.ReservedTo >= today)
             .OrderBy(r => r.ReservedFrom)
             .FirstOrDefault();
 
-        if (r == null)
-        {
-            return new DeskData(
-                desk.Id,
-                false,
-                desk.IsInMaintenance,
-                null,
-                null
-            );
-        }
+        return r == null ? CreateDeskNoUser(desk) : CreateDeskWithUser(desk, r);
+    }
 
-        var u = r.User;
+    private static DeskData CreateDeskWithUser(Desk desk, Reservation r)
+    {
+        User u = r.User;
 
         return new DeskData(
             desk.Id,
@@ -45,6 +35,17 @@ public record DeskData(
                 r.ReservedFrom,
                 r.ReservedTo
             )
+        );
+    }
+
+    private static DeskData CreateDeskNoUser(Desk desk)
+    {
+        return new DeskData(
+            desk.Id,
+            false,
+            desk.IsInMaintenance,
+            null,
+            null
         );
     }
 }
