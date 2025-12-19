@@ -5,5 +5,5 @@ public record CurrentUserReservations(
     List<ReservationData> PastReservations
 )
 {
-    public static readonly CurrentUserReservations Empty = new([], []);
+    public static CurrentUserReservations Empty => new([], []);
 }
