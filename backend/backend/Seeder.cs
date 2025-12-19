@@ -45,14 +45,15 @@ public static class Seeder
         db.Desks.AddRange(desks);
         db.SaveChanges();
 
+        // --- RESERVATIONS ---
         List<Reservation> reservations =
         [
             new()
             {
                 DeskId = desks[2].Id, Desk = desks[2],
                 UserId = users[0].Id, User = users[0],
-                ReservedFrom = today,
-                ReservedTo = tomorrow
+                ReservedFrom = today.AddDays(1),
+                ReservedTo = tomorrow.AddDays(5)
             },
 
             new()
