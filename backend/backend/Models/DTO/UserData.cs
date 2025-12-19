@@ -8,4 +8,4 @@ public record UserData(
 )
 {
     public static UserData Empty => new(-1, string.Empty, string.Empty, string.Empty);
-};
+}

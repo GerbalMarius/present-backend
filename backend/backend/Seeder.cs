@@ -18,7 +18,7 @@ public static class Seeder
         // --- USERS ---
         List<User> users =
         [
-            new() { Email = "alice@demo.com", Password = "pass", FirstName = "Alice", LastName = "Anders" },
+            new() { Email = "marius@gmail.com", Password = "pass", FirstName = "Marius", LastName = "Ambrazevicius" },
             new() { Email = "bob@demo.com", Password = "pass", FirstName = "Bob", LastName = "Baker" },
             new() { Email = "cara@demo.com", Password = "pass", FirstName = "Cara", LastName = "Carter" },
             new() { Email = "drew@demo.com", Password = "pass", FirstName = "Drew", LastName = "Doe" }

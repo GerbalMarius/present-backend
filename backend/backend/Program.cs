@@ -1,7 +1,6 @@
 using backend;
 using backend.Errors;
 using backend.Filters;
-using backend.Models;
 using backend.Models.DTO;
 using backend.RouteActions;
 
@@ -37,7 +36,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseHttpsRedirection();
-app.UseSession();
 app.UseCors("AllowFrontend");
 
 var root = app.MapGroup("/api")
@@ -49,6 +47,11 @@ reservations.MapPost("/", ReservationActions.CreateAsync)
         .WithName("CreateReservation")
         .Produces<ReservationData>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
+        .ProducesProblem(StatusCodes.Status404NotFound);
+
+reservations.MapDelete("/{id:long}", ReservationActions.CancelAsync)
+        .WithName("CancelReservation")
+        .Produces(StatusCodes.Status204NoContent)
         .ProducesProblem(StatusCodes.Status404NotFound);
 
 var desks = root.MapGroup("/desks");

@@ -9,6 +9,7 @@ namespace backend.Models;
 [Index(nameof(ReservedTo), nameof(ReservedFrom))]
 public sealed class Reservation
 {
+    //we still use this id for easier control over cancellations
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key, Column("id")]
     public long Id { get; set; }

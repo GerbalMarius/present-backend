@@ -1,6 +1,4 @@
-﻿using backend.Attributes;
-
-namespace backend.Models.DTO;
+﻿namespace backend.Models.DTO;
 
 public record ReservationData(
     long Id,
@@ -10,6 +8,7 @@ public record ReservationData(
     DateTime ReservedTo
 )
 {
+    public static ReservationData Empty => new(-1, -1, -1, DateTime.MinValue, DateTime.MinValue);
     public static ReservationData Of(Reservation reservation) => new(
         reservation.Id, reservation.UserId, reservation.DeskId, reservation.ReservedFrom, reservation.ReservedTo
     );

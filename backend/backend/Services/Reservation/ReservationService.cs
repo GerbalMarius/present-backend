@@ -30,14 +30,19 @@ public sealed class ReservationService(DeskDbContext db) : IReservationService
         return ReservationData.Of(reservation);
     }
 
-    public async Task CancelAsync(long reservationId, CancellationToken cancellationToken = default)
+    public async Task<ReservationData> CancelAsync(long reservationId, CancellationToken cancellationToken = default)
     {
         var reservation = await db.Reservations.FindAsync([reservationId], cancellationToken);
-        ThrowIfNotFound(reservation, reservationId);
+        if (reservation == null)
+        {
+            return ReservationData.Empty;
+        }
         
-        db.Reservations.Remove(reservation!);
+        db.Reservations.Remove(reservation);
         
         await db.SaveChangesAsync(cancellationToken);
+        
+        return ReservationData.Of(reservation);
     }
 
     private static void ThrowIfNotFound<T, TId>(T? item,

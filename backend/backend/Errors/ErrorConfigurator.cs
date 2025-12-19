@@ -10,7 +10,7 @@ public static class ErrorConfigurator
         Exception? ex = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
         
         Dictionary<string, object?> body = 
-            CreateBodyForException(ex ?? new Exception("Unexpected error occurred."));
+            CreateBodyForException(ex ?? new Exception("Unexpected error occurred"));
 
         HttpResponse response = httpContext.Response;
         
