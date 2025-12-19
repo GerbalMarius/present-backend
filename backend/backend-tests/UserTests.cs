@@ -25,9 +25,9 @@ public class UserTests : IDisposable
         
         var ok = Assert.IsType<Ok<UserData>>(result);
         
-        Assert.True(
-            ok.Value == user && ok.StatusCode == StatusCodes.Status200OK
-            );
+        Assert.Equal(ok.Value, user);
+        
+        Assert.Equal(StatusCodes.Status200OK, ok.StatusCode);
         
     }
 

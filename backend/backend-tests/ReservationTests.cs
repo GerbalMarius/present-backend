@@ -114,11 +114,7 @@ public class ReservationTests : IDisposable
             .ReturnsAsync(ReservationData.Empty);
         
         IResult result = await ReservationActions.CancelAsync(reservationId, _reservationService.Object);
-        _reservationService.Verify(
-            s => 
-                s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), 
-                Times.Once
-            );
+        _reservationService.Verify(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), Times.Once);
         
         var notFound = Assert.IsType<NotFound<Dictionary<string, object?>>>(result);    
         Assert.NotNull(notFound.Value);

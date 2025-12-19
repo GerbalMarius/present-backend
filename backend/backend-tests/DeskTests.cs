@@ -7,7 +7,7 @@ using Moq;
 
 namespace backend_tests;
 
-// In Xunit setups are constructors, teardown is Dispose()
+
 public class DeskTests : IDisposable
 {
     private readonly Mock<IDeskService> _deskService = new();
@@ -20,10 +20,14 @@ public class DeskTests : IDisposable
         
         IResult result = await DeskActions.GetAllAsync(_deskService.Object);
        _deskService.Verify(s => s.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
-        
-        Assert.True(
-            result is Ok<List<DeskData>> {Value.Count: 0, StatusCode: StatusCodes.Status200OK }
-            );
+       
+       var okResult = Assert.IsType<Ok<List<DeskData>>>(result);
+       
+       Assert.NotNull(okResult.Value);
+       
+       Assert.Empty(okResult.Value);
+       
+       Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
        
     }
 
@@ -36,15 +40,13 @@ public class DeskTests : IDisposable
                        .ReturnsAsync(deskData);
         
         IResult result = await DeskActions.GetByIdAsync(1, _deskService.Object);
-        _deskService.Verify(
-            s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), 
-            Times.Once);
+        _deskService.Verify(s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
         
+        var okResult = Assert.IsType<Ok<DeskData>>(result);
         
-        Assert.True(
-            result is Ok<DeskData> deskResult && deskResult.Value == deskData
-            && deskResult.StatusCode == StatusCodes.Status200OK
-            );
+        Assert.NotNull(okResult.Value);
+        Assert.Equal(deskData, okResult.Value);
+        Assert.Equal(StatusCodes.Status200OK, okResult.StatusCode);
     }
 
     [Fact]
