@@ -12,13 +12,14 @@ public static class Seeder
         var db = scope.ServiceProvider.GetRequiredService<DeskDbContext>();
         db.Database.EnsureCreated();
 
-        var todayStart = DateTime.Now.Date;
-        var tomorrowStart = todayStart.AddDays(1);
+        // Day boundaries only
+        var today = DateTime.Now.Date;
+        var tomorrow = today.AddDays(1);
 
         // --- USERS ---
         List<User> users =
         [
-            new() { Email = "marius@gmail.com", Password = "pass", FirstName = "Marius", LastName = "Ambrazevicius" },
+            new() { Email = "marius@gmail.com", Password = "pass", FirstName = "Marius", LastName = "Ambrazevičius" },
             new() { Email = "bob@demo.com", Password = "pass", FirstName = "Bob", LastName = "Baker" },
             new() { Email = "cara@demo.com", Password = "pass", FirstName = "Cara", LastName = "Carter" },
             new() { Email = "drew@demo.com", Password = "pass", FirstName = "Drew", LastName = "Doe" }
@@ -29,8 +30,10 @@ public static class Seeder
         // --- DESKS ---
         List<Desk> desks =
         [
-            new() { IsInMaintenance = false },
+            new() { IsInMaintenance = false }, 
             new() { IsInMaintenance = true },
+            new() { IsInMaintenance = false },
+            new() { IsInMaintenance = false },
             new() { IsInMaintenance = false },
             new() { IsInMaintenance = false },
             new() { IsInMaintenance = false },
@@ -39,60 +42,73 @@ public static class Seeder
         ];
 
         db.Desks.AddRange(desks);
-
         db.SaveChanges();
 
-        // --- RESERVATIONS ---
         List<Reservation> reservations =
         [
             new()
             {
-                Id = 1,
                 DeskId = desks[2].Id, Desk = desks[2],
                 UserId = users[0].Id, User = users[0],
-                ReservedFrom = todayStart.AddHours(9),
-                ReservedTo = todayStart.AddHours(17)
+                ReservedFrom = today,
+                ReservedTo = tomorrow
             },
-
 
             new()
             {
-                
-                Id = 2,
                 DeskId = desks[3].Id, Desk = desks[3],
                 UserId = users[1].Id, User = users[1],
-                ReservedFrom = todayStart.AddHours(-1),
-                ReservedTo = todayStart.AddHours(2)
+                ReservedFrom = today.AddDays(-1),
+                ReservedTo = tomorrow
             },
-
 
             new()
             {
-                Id = 3,
                 DeskId = desks[4].Id, Desk = desks[4],
                 UserId = users[2].Id, User = users[2],
-                ReservedFrom = todayStart.AddDays(-1).AddHours(10),
-                ReservedTo = todayStart.AddDays(-1).AddHours(12)
+                ReservedFrom = today.AddDays(-3),
+                ReservedTo = today.AddDays(-2)
             },
-
 
             new()
             {
-                Id = 4,
                 DeskId = desks[5].Id, Desk = desks[5],
                 UserId = users[3].Id, User = users[3],
-                ReservedFrom = tomorrowStart.AddHours(10),
-                ReservedTo = tomorrowStart.AddHours(12)
+                ReservedFrom = tomorrow,
+                ReservedTo = tomorrow.AddDays(2)
+            },
+
+            new()
+            {
+                DeskId = desks[6].Id, Desk = desks[6],
+                UserId = users[2].Id, User = users[2],
+                ReservedFrom = today.AddDays(-2),
+                ReservedTo = tomorrow
             },
 
 
             new()
             {
-                Id = 5,
-                DeskId = desks[6].Id, Desk = desks[6],
-                UserId = users[2].Id, User = users[2],
-                ReservedFrom = todayStart.AddHours(-2), // yesterday late
-                ReservedTo = todayStart.AddHours(2) // today early
+                DeskId = desks[7].Id, Desk = desks[7],
+                UserId = users[0].Id, User = users[0],
+                ReservedFrom = today.AddDays(-14),
+                ReservedTo = today.AddDays(-11)
+            },
+
+            new()
+            {
+                DeskId = desks[8].Id, Desk = desks[8],
+                UserId = users[0].Id, User = users[0],
+                ReservedFrom = today.AddDays(-6),
+                ReservedTo = today.AddDays(-5)
+            },
+
+            new()
+            {
+                DeskId = desks[0].Id, Desk = desks[0],
+                UserId = users[0].Id, User = users[0],
+                ReservedFrom = today.AddDays(-1),
+                ReservedTo = today
             }
         ];
 

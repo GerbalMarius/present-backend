@@ -28,6 +28,12 @@ public sealed class ApiError
         .Code("BAD_REQUEST")
         .Message(msg ?? "Bad request");
     
+    //example error for now, if authentication is needed should validate on jot or session
+    public static ApiError Unauthorized(string? message) => Init()
+        .HttpStatus(StatusCodes.Status401Unauthorized)
+        .Code("UNAUTHORIZED")
+        .Message(message ?? "Unauthorized");
+    
 
     public ApiError HttpStatus(int status)
     {

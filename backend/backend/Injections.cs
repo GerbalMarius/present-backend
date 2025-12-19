@@ -1,5 +1,4 @@
-﻿using backend.Deps.Password;
-using backend.Migrations.Data;
+﻿using backend.Migrations.Data;
 using backend.Services.Desk;
 using backend.Services.Reservation;
 using backend.Services.User;
@@ -13,7 +12,6 @@ public static class Injections
     {
         ConfigureDbContext(services, options => options.UseInMemoryDatabase("Desks"));
         AddServices(services);
-        AddUtilities(services);
     }
     
     private static void ConfigureDbContext(IServiceCollection services, Action<DbContextOptionsBuilder> optionsBuilder)
@@ -21,11 +19,6 @@ public static class Injections
         services.AddDbContext<DeskDbContext>(optionsBuilder);
     }
     
-    private static void AddUtilities(IServiceCollection services)
-    {
-        services.AddTransient<IPasswordEncoder, BCryptPasswordEncoder>();
-    }
-
     private static void AddServices(IServiceCollection services)
     {
         services.AddScoped<IDeskService, DeskService>();

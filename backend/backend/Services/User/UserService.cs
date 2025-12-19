@@ -24,4 +24,34 @@ public sealed class UserService(DeskDbContext db) : IUserService
             .Select(r => ReservationData.Of(r))
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<CurrentUserReservations> GetCurrentUserReservationsAsync(CancellationToken cancellationToken = default)
+    {
+        UserData me = await GetCurrentUserAsync(cancellationToken);
+
+        if (me == UserData.Empty)
+        {
+            return CurrentUserReservations.Empty;
+        }
+
+        DateTime today = DateTime.Now.Date;
+        
+        List<ReservationData> allReservations = await db.Reservations
+                .Where(r => r.UserId == me.Id)
+                .Select(r => ReservationData.Of(r))
+                .ToListAsync(cancellationToken);
+        
+        
+        List<ReservationData> current = allReservations
+            .Where(r => r.ReservedTo >= today) 
+            .OrderBy(r => r.ReservedFrom)
+            .ToList();
+
+        List<ReservationData> past = allReservations
+            .Where(r => r.ReservedTo < today)
+            .OrderByDescending(r => r.ReservedFrom)
+            .ToList();
+        
+        return new CurrentUserReservations(current, past);
+    }
 }

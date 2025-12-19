@@ -15,6 +15,18 @@ public static class ReservationActions
             value : reservation
         );
     }
+
+    public static async Task<IResult> CancelForADayAsync(long id, IReservationService reservationService)
+    {
+        var reservationData = await reservationService.CancelForADayAsync(id);
+        if (reservationData == ReservationData.Empty)
+        {
+            return ApiError.NotFound(id, "Reservation not found")
+                           .ToResult();
+        }
+
+        return TypedResults.NoContent();
+    }
     
     public static async Task<IResult> CancelAsync(long id, IReservationService reservationService)
     {

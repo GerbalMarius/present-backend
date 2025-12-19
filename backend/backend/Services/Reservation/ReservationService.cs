@@ -30,6 +30,28 @@ public sealed class ReservationService(DeskDbContext db) : IReservationService
         return ReservationData.Of(reservation);
     }
 
+    public async Task<ReservationData> CancelForADayAsync(long reservationId, CancellationToken cancellationToken = default)
+    {
+        var reservation = await db.Reservations.FindAsync([reservationId], cancellationToken);
+        if (reservation == null)
+        {
+            return ReservationData.Empty;
+        }
+
+        reservation.ReservedFrom = reservation.ReservedFrom.AddDays(1);
+        db.Update(reservation);
+        
+        
+        await db.SaveChangesAsync(cancellationToken);
+
+        if (reservation.ReservedTo >= reservation.ReservedFrom) return ReservationData.Of(reservation);
+        
+        db.Reservations.Remove(reservation);
+        await db.SaveChangesAsync(cancellationToken);
+
+        return ReservationData.Of(reservation);
+    }
+
     public async Task<ReservationData> CancelAsync(long reservationId, CancellationToken cancellationToken = default)
     {
         var reservation = await db.Reservations.FindAsync([reservationId], cancellationToken);

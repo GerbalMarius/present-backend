@@ -34,6 +34,29 @@ public class UserTests : IDisposable
     [Fact]
     public async Task UserActionsGetReservationDataByUserAsync_ReturnsOkList()
     {
+        const long userId = 1;
+        
+        DateTime now = new DateTime(2003, 9, 5);
+
+        List<ReservationData> reservations =
+        [
+            new(1, userId, 2, now, now.AddDays(5)),
+            new(2, userId, 3, now, now.AddDays(10))
+        ];
+        
+        _userService.Setup(s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(reservations);
+        
+        IResult result = await UserActions.GetReservationDataByUserAsync(userId, _userService.Object);
+        _userService.Verify(s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+        
+        var ok = Assert.IsType<Ok<List<ReservationData>>>(result);
+        
+        Assert.NotNull(ok.Value);
+        Assert.True(ok.Value.SequenceEqual(reservations));
+        
+        Assert.Equal(StatusCodes.Status200OK, ok.StatusCode);
+        
         
     }
     

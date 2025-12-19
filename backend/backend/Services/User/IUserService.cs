@@ -7,4 +7,6 @@ public interface IUserService
     Task<UserData> GetCurrentUserAsync(CancellationToken cancellationToken = default);
     
     Task<List<ReservationData>> GetReservationDataByUserAsync(long userId, CancellationToken cancellationToken = default);
+    
+    Task<CurrentUserReservations> GetCurrentUserReservationsAsync(CancellationToken cancellationToken = default);
 }

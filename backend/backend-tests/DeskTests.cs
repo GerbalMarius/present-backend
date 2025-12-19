@@ -30,7 +30,7 @@ public class DeskTests : IDisposable
     [Fact]
     public async Task DeskActionsGetByIdAsync_WhenFound_ReturnsOkDesk()
     {
-        DeskData deskData = new(1, true, false, null);
+        DeskData deskData = new(1, true, false, null, null);
         
         _deskService.Setup(s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()))
                        .ReturnsAsync(deskData);

@@ -49,6 +49,11 @@ reservations.MapPost("/", ReservationActions.CreateAsync)
         .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
         .ProducesProblem(StatusCodes.Status404NotFound);
 
+reservations.MapPatch("/{id:long}/day", ReservationActions.CancelForADayAsync)
+    .WithName("CancelReservationForADay")
+    .Produces(StatusCodes.Status204NoContent)
+    .ProducesProblem(StatusCodes.Status404NotFound);
+
 reservations.MapDelete("/{id:long}", ReservationActions.CancelAsync)
         .WithName("CancelReservation")
         .Produces(StatusCodes.Status204NoContent)
@@ -71,5 +76,10 @@ users.MapGet("/{id:long}/reservations", UserActions.GetReservationDataByUserAsyn
 users.MapGet("/me", UserActions.GetCurrentUserAsync)
     .WithName("GetCurrentUser")
     .Produces<UserData>();
+
+users.MapGet("/me/reservations", UserActions.GetCurrentUserReservationsAsync)
+    .WithName("GetCurrentUserReservations")
+    .Produces<CurrentUserReservations>()
+    .ProducesProblem(StatusCodes.Status401Unauthorized);
 
 app.Run();
