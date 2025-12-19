@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace backend.Models;
 
 [Table("reservations")]
-[Index(nameof(DeskId), nameof(UserId), IsUnique = true)]
+[Index(nameof(DeskId), nameof(UserId))]
 [Index(nameof(ReservedTo), nameof(ReservedFrom))]
 public sealed class Reservation
 {

@@ -7,6 +7,7 @@ namespace backend_tests.Helpers;
 
 public static class Http
 {
+    // Validates an object using the ValidationFilter
     public static async Task<Dictionary<string, object?>> Validate(object obj)
     {
         FakeEndpointFilterContext filterCtx = new(obj);
