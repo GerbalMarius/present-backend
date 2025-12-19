@@ -16,11 +16,13 @@ public class ReservationTests : IDisposable
     [Fact]
     public async Task ReservationActionsCreateReservation_WithValidData_ReturnsCreated()
     {
+        var now = new DateTime(2003, 9, 5);
+        
         var viewData = new ReservationCreateView(
             1,
             2,
-            DateTime.Now,
-            DateTime.Now.AddDays(5)
+            now,
+            now.AddDays(5)
         );
         
         var created = new ReservationData(
@@ -31,13 +33,17 @@ public class ReservationTests : IDisposable
             viewData.ReservedTo!.Value
             );
         
-        _reservationService.Setup( s => s.CreateAsync(viewData, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(created);
+        _reservationService.Setup(
+                s => s.CreateAsync(viewData, It.IsAny<CancellationToken>())
+                ).ReturnsAsync(created);
         
         
         IResult result = await ReservationActions.CreateAsync(viewData, _reservationService.Object);
         
-        _reservationService.Verify(s => s.CreateAsync(viewData, It.IsAny<CancellationToken>()), Times.Once);
+        _reservationService.Verify(
+            s => s.CreateAsync(viewData, It.IsAny<CancellationToken>()), 
+            Times.Once
+            );
         
         var createdAt = Assert.IsType<CreatedAtRoute<ReservationData>>(result);
         Assert.NotNull(createdAt.Value);
@@ -50,7 +56,7 @@ public class ReservationTests : IDisposable
     [Fact]
     public async Task ReservationActionsCreateReservation_WithInvalidData_ReturnsUnprocessableEntity()
     {
-        DateTime now = new DateTime(2003, 9, 5);
+        var now = new DateTime(2003, 9, 5);
         
         ValidationFilter filter = new();
         
@@ -65,7 +71,8 @@ public class ReservationTests : IDisposable
 
         var resultObj = await filter.InvokeAsync(filterCtx, Http.CreateNext);
 
-        var unprocessableEntityResult = Assert.IsType<UnprocessableEntity<Dictionary<string, object?>>>(resultObj);
+        var unprocessableEntityResult 
+            = Assert.IsType<UnprocessableEntity<Dictionary<string, object?>>>(resultObj);
 
         HttpContext httpCtx = Http.CreateContext();
         await unprocessableEntityResult.ExecuteAsync(httpCtx);
@@ -75,7 +82,6 @@ public class ReservationTests : IDisposable
         
         Assert.Contains("errors", body);
 
-        //checking to see if all errors are present
         var validationErrors = Assert.IsType<Dictionary<string, string>>(body["errors"]);
 
         Assert.Equal(3, validationErrors.Count);
@@ -89,15 +95,28 @@ public class ReservationTests : IDisposable
     [Fact]
     public async Task ReservationActionsCancelReservation_WhenFound_ReturnsNoContent()
     {
+        var now = new DateTime(2003, 9, 5);
         const long reservationId = 5;
         
-        ReservationData reservationData = new(reservationId, 1, 2, DateTime.Now, DateTime.Now.AddDays(5));
+        var reservationData = new ReservationData(
+            reservationId, 
+            1, 
+            2, 
+            now, 
+            now.AddDays(5)
+            );
+        
         _reservationService
-            .Setup(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(reservationData);
+            .Setup(
+                s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>())
+                ).ReturnsAsync(reservationData);
         
         IResult result = await ReservationActions.CancelAsync(reservationId, _reservationService.Object);
-        _reservationService.Verify(s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), Times.Once);
+        
+        _reservationService.Verify(
+            s => s.CancelAsync(reservationId, It.IsAny<CancellationToken>()), 
+            Times.Once
+            );
 
         var noContent = Assert.IsType<NoContent>(result);
         Assert.Equal(StatusCodes.Status204NoContent, noContent.StatusCode);
@@ -126,14 +145,16 @@ public class ReservationTests : IDisposable
      [Fact]
     public async Task ReservationActionsCancelForADay_WhenFound_ReturnsNoContent()
     {
+        var now = new DateTime(2003, 9, 5);
+        
         const long reservationId = 7;
 
         var returned = new ReservationData(
             reservationId,
-            UserId: 1,
-            DeskId: 2,
-            ReservedFrom: DateTime.Now.AddDays(1),
-            ReservedTo: DateTime.Now.AddDays(5)
+             1,
+            2,
+            now.AddDays(1), 
+            now.AddDays(5)
         );
 
         _reservationService

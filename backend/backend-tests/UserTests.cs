@@ -15,13 +15,17 @@ public class UserTests : IDisposable
     [Fact]
     public async Task UserActionsGetCurrentUserAsync_ReturnsOkUser()
     {
-        var user = new UserData(5, "mariukas.ambrazevicius@gmail.com", "Marius", "Ambrazevicius");
-        _userService.Setup(s => s.GetCurrentUserAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
+        var user = new UserData(5, "mariukas.ambrazevicius@gmail.com", "Marius", "Ambrazevičius");
+        _userService.Setup(
+                s => s.GetCurrentUserAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(user);
         
         
         IResult result = await UserActions.GetCurrentUserAsync(_userService.Object);
-        _userService.Verify(s => s.GetCurrentUserAsync(It.IsAny<CancellationToken>()), Times.Once);
+        _userService.Verify(
+            s => s.GetCurrentUserAsync(It.IsAny<CancellationToken>()), 
+            Times.Once
+            );
         
         var ok = Assert.IsType<Ok<UserData>>(result);
         
@@ -45,9 +49,8 @@ public class UserTests : IDisposable
         ];
         
         _userService.Setup(
-                s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>())
-                )
-                .ReturnsAsync(reservations);
+            s => s.GetReservationDataByUserAsync(userId, It.IsAny<CancellationToken>())
+            ).ReturnsAsync(reservations);
         
         IResult result = await UserActions.GetReservationDataByUserAsync(userId, _userService.Object);
         _userService.Verify(

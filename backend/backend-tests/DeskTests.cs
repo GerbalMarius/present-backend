@@ -19,7 +19,10 @@ public class DeskTests : IDisposable
                        .ReturnsAsync(new List<DeskData>());
         
         IResult result = await DeskActions.GetAllAsync(_deskService.Object);
-       _deskService.Verify(s => s.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
+       _deskService.Verify(
+           s => s.GetAllAsync(It.IsAny<CancellationToken>()), 
+           Times.Once
+           );
        
        var okResult = Assert.IsType<Ok<List<DeskData>>>(result);
        
@@ -36,11 +39,15 @@ public class DeskTests : IDisposable
     {
         DeskData deskData = new(1, true, false, null, null);
         
-        _deskService.Setup(s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                       .ReturnsAsync(deskData);
+        _deskService.Setup(
+                s => s.GetByIdAsync(1, It.IsAny<CancellationToken>())
+                ).ReturnsAsync(deskData);
         
         IResult result = await DeskActions.GetByIdAsync(1, _deskService.Object);
-        _deskService.Verify(s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), Times.Once);
+        _deskService.Verify(
+            s => s.GetByIdAsync(1, It.IsAny<CancellationToken>()), 
+            Times.Once
+            );
         
         var okResult = Assert.IsType<Ok<DeskData>>(result);
         
@@ -52,11 +59,15 @@ public class DeskTests : IDisposable
     [Fact]
     public async Task DeskActionsGetByIdAsync_WhenNotFound_ReturnsNotFound()
     {
-        _deskService.Setup(s => s.GetByIdAsync(-1, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(DeskData.Empty);
+        _deskService.Setup(
+                s => s.GetByIdAsync(-1, It.IsAny<CancellationToken>())
+                ).ReturnsAsync(DeskData.Empty);
         
         IResult result = await DeskActions.GetByIdAsync(-1, _deskService.Object);
-        _deskService.Verify(s => s.GetByIdAsync(-1, It.IsAny<CancellationToken>()), Times.Once);
+        _deskService.Verify(
+            s => s.GetByIdAsync(-1, It.IsAny<CancellationToken>()), 
+            Times.Once
+            );
 
         var notFound = Assert.IsType<NotFound<Dictionary<string, object?>>>(result);    
 
